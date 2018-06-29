@@ -15,6 +15,7 @@ import {
   CalendarEventAction,
   CalendarEventTimesChangedEvent
 } from 'angular-calendar';
+import { Store, select } from '@ngrx/store';
 
 const colors: any = {
   red: {
@@ -30,6 +31,9 @@ const colors: any = {
     secondary: '#FDF1BA'
   }
 };
+interface IAppState {
+  events: CalendarEvent[];
+}
 
 @Component({
   selector: 'app-root',
@@ -42,7 +46,7 @@ export class AppComponent {
   view: string = 'month';
 
   viewDate: Date = new Date();
-
+  
   modalData: {
     action: string;
     event: CalendarEvent;
@@ -96,6 +100,9 @@ export class AppComponent {
       draggable: true
     }
   ];
+  constructor(private store: Store<IAppState>) {
+
+  }
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
       if (
