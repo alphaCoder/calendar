@@ -6,6 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ModuleWithProviders } from '@angular/compiler/src/core';
 import { LoginComponent } from './login/login.component';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './reducers';
 
 @NgModule({
   imports: [
@@ -25,6 +27,7 @@ export class AuthModule {
  @NgModule({
    imports: [
      AuthModule,
+     StoreModule.forFeature('auth', reducers),
      RouterModule.forChild([{path: 'login', component: LoginComponent}])
    ]
  })
