@@ -12,6 +12,7 @@ import { routes } from './routes';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 import { CustomRouterStateSerializer } from './shared/utils';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { CustomRouterStateSerializer } from './shared/utils';
       */
       stateKey: 'router',
     }),
+    EffectsModule.forRoot([]),
     RouterModule.forRoot(routes, {useHash: true})
   ],
   providers: [
