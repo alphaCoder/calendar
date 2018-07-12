@@ -18,7 +18,7 @@ export class LoginFormComponent {
     }
   }
 
-  @Input() errorMessage: string | null;
+  @Input() errorMessage: string|null;
   
   @Output() submitted = new EventEmitter<Authenticate>();
 
