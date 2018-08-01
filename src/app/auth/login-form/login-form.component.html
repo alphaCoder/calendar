@@ -21,8 +21,8 @@
         </div>
         <button type="submit" class="ui fluid large teal submit button">Login</button>
       </div>
-      <div class="ui error message"></div>
     </form>
+    <div class="ui error message" *ngIf="errorMessage">{{errorMessage}}</div>
     <!-- <div class="ui message">
       New to us? <a href="#">Sign Up</a>
     </div> -->
