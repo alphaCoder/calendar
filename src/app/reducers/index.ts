@@ -15,7 +15,7 @@ import {
    * ensure that none of the reducers accidentally mutates the state.
    */
   import { storeFreeze } from 'ngrx-store-freeze';
-import { RouterStateUrl } from '../shared/utils';
+  import { RouterStateUrl } from '../shared/utils';
   
   /**
    * Every reducer module's default export is the reducer function itself. In
