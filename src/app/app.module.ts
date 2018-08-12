@@ -3,21 +3,23 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { NgModule } from '@angular/core';
 import { CalendarModule } from 'angular-calendar';
 import { AuthModule } from './auth/auth.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { RouterModule } from '@angular/router';
 import { routes } from './routes';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { EffectsModule } from '@ngrx/effects';
+import { CalenderEffects } from './dashboard/effects/calender.effects';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    DashboardComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +27,11 @@ import { EffectsModule } from '@ngrx/effects';
     BrowserAnimationsModule,
     AuthModule.forRoot(),
     StoreModule.forRoot(reducers, {metaReducers}),
+    StoreDevtoolsModule.instrument({
+      name: 'Calender App DevTools',
+      maxAge: 25,
+      logOnly: environment.production
+    }),
     /**
      * @ngrx/router-store keeps router state up-to-date in the store.
      */
@@ -36,6 +43,7 @@ import { EffectsModule } from '@ngrx/effects';
       stateKey: 'router',
     }),
     EffectsModule.forRoot([]),
+    DashboardModule,
     RouterModule.forRoot(routes, {useHash: true})
   ],
   providers: [
