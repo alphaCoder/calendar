@@ -14,7 +14,6 @@ import { routes } from './routes';
 import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { EffectsModule } from '@ngrx/effects';
-import { CalenderEffects } from './dashboard/effects/calender.effects';
 import { environment } from '../environments/environment';
 
 @NgModule({

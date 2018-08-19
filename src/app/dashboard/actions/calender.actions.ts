@@ -4,7 +4,8 @@ import { CalendarEvent } from 'angular-calendar';
 export enum CalenderActionTypes {
     Add = '[Calender] Add',
     Update = '[Calender] Update',
-    Delete = '[Calender] Delete'
+    Delete = '[Calender] Delete',
+    Load = '[Calender] Load'
 }
 
 export class AddEvent implements Action {
@@ -22,7 +23,12 @@ export class DeleteEvent implements Action {
     constructor(public payload: CalendarEvent) {}
 }
 
+export class Load implements Action {
+    readonly type = CalenderActionTypes.Load;
+}
+
 export type CalenderActions = 
 | AddEvent
 | UpdateEvent
 | DeleteEvent
+| Load

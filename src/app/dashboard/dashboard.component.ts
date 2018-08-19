@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import {
   startOfDay,
@@ -10,15 +10,16 @@ import {
   isSameMonth,
   addHours
 } from 'date-fns';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import {
   CalendarEvent,
   CalendarEventAction,
   CalendarEventTimesChangedEvent
 } from 'angular-calendar';
 import { Store, select } from '@ngrx/store';
-import * as fromCalender from '../reducers';
-import * as Cal from './actions/calender.actions';
+import * as fromCalender from './reducers/calender.reducer';
+import * as calenderActions from './actions/calender.actions';
+import { tap } from 'rxjs/operators';
 
 const colors: any = {
   red: {
@@ -37,6 +38,7 @@ const colors: any = {
 interface IAppState {
   events: CalendarEvent[];
 }
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -69,50 +71,11 @@ export class DashboardComponent {
     }
   ];
   refresh: Subject<any> = new Subject();
-  events: CalendarEvent[] = [
-    // {
-    //   start: subDays(startOfDay(new Date()), 1),
-    //   end: addDays(new Date(), 1),
-    //   title: 'A 3 day event',
-    //   color: colors.red,
-    //   actions: this.actions
-    // },
-    // {
-    //   start: startOfDay(new Date()),
-    //   title: 'An event with no end date',
-    //   color: colors.yellow,
-    //   actions: this.actions
-    // },
-    // {
-    //   start: subDays(endOfMonth(new Date()), 3),
-    //   end: addDays(endOfMonth(new Date()), 3),
-    //   title: 'A long event that spans 2 months',
-    //   color: colors.blue
-    // },
-    // {
-    //   start: addHours(startOfDay(new Date()), 2),
-    //   end: new Date(),
-    //   title: 'A draggable and resizable event',
-    //   color: colors.yellow,
-    //   actions: this.actions,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true
-    //   },
-    //   draggable: true
-    // }
-  ];
+  events: CalendarEvent[] = [];
+  events$: Observable<CalendarEvent[]>;
+  test:any[] = [];
   constructor(private store: Store<fromCalender.State>) {
-    // TODO: unsubscribe
-    store.pipe(select('events')).subscribe(events => {
-      console.log('subscribe events', events.byHash);
-      if (events && events.byHash) {
-        this.events = [];
-        Object.keys(events.byHash).forEach(key => {
-          this.events.push(events.byHash[key]);
-        });
-      }
-    })
+    this.events$ = store.pipe(select(fromCalender.getEvents));
   }
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -141,12 +104,11 @@ export class DashboardComponent {
 
   handleEvent(action: string, event: CalendarEvent): void {
     console.log('handle event', action, event);
-    // this.modalData = { event, action };
-    // this.modal.open(this.modalContent, { size: 'lg' });
   }
 
   addEvent(): void {
-    const e = {
+    
+    let e = {
       id: Math.random(),
       title: 'New event',
       start: startOfDay(new Date()),
@@ -158,9 +120,25 @@ export class DashboardComponent {
         afterEnd: true
       }
     };
-    this.store.dispatch(new Cal.AddEvent(e));
-    // this.events.push(e);
+    this.store.dispatch(new calenderActions.AddEvent(e));
     this.refresh.next();
   }
 
+  deleteEvent(e:CalendarEvent) {
+    this.store.dispatch(new calenderActions.DeleteEvent(e));
+  }
+
+  update(event: CalendarEvent, prop, val) {
+    // this is temporary workaround as calenderEvent are immutable
+    var e = {...event};
+    if (prop === 'title') {
+      e.title = val;
+    }
+    else if (prop == 'start') {
+      e.start = val;
+    } else {
+      e.end = val;
+    }
+    this.store.dispatch(new calenderActions.UpdateEvent(e));
+  }
 }

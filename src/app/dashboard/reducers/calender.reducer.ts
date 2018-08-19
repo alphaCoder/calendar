@@ -1,45 +1,44 @@
 import { CalenderActions, CalenderActionTypes } from '../actions/calender.actions';
 import { CalendarEvent } from 'angular-calendar';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface State {
-    byId: Array<string|number>,
-    byHash: Map<string, CalendarEvent>
+    events: CalendarEvent[]
 }
 
 export const initialState: State = {
-    byId: [],
-    byHash: new Map<string, CalendarEvent>()
+    events: []
 }
 
 export function reducer(state = initialState, action: CalenderActions): State {
     switch(action.type) {
         case CalenderActionTypes.Add: 
-        console.log('add', state);
             return {
-                byId: [...state.byId, action.payload.id],
-                byHash: {
-                    ...state.byHash,
-                    [action.payload.id]: action.payload
-                }
+                events: [...state.events, action.payload]
             }
        
         case CalenderActionTypes.Update: 
-            state.byHash[action.payload.id]= {
-                ...state.byHash[action.payload.id],
-                ...action.payload
-            }
-          return state;
+            const updatedEvents = state.events.map(
+                item => action.payload.id ==item.id ? action.payload: item
+            );
+            
+          return {
+              events: updatedEvents
+          };
         case CalenderActionTypes.Delete: 
-            const { [action.payload.id]: deletedEvent, ...newStateByHash} = state.byHash;
             return {
-                byId: state.byId.filter(item => item !== action.payload.id),
-                byHash: newStateByHash
+                events: state.events.filter(item => item.id != action.payload.id)
             }
         
         default:
-        console.log('reducer action type', action);
             return state;    
         }
 }
 
-export const getEvents = (state: State) => state.byHash.values();
+// export const getEvents = (state: State) => state.byHash.values();
+
+const getEventsFeatureState = createFeatureSelector<State>('events');
+export const getEvents = createSelector(
+    getEventsFeatureState,
+    state => state.events
+);

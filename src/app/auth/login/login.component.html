@@ -1,5 +1,10 @@
-<app-login-form 
-    (submitted)="onSubmit($event)" 
-    [pending]="pending$ | async" 
-    [errorMessage]="error$ | async">
-</app-login-form>
+<div class="ui middle aligned center aligned grid">
+    <div class="eight wide colum"></div>
+    <div class="three wide column">
+        <app-login-form 
+            (submitted)="onSubmit($event)" 
+            [pending]="pending$ | async" 
+            [errorMessage]="error$ | async">
+        </app-login-form>
+    </div>
+</div>
